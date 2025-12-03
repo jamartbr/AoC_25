@@ -1,6 +1,20 @@
 import numpy as np
         
 
+def calculate_joltage(line, size):
+    sol = ''
+    eliminate = len(line)-size
+    while eliminate>0 and len(sol)<size:
+        digits = np.array([int(c) for c in line])
+        pos = int(np.argmax(digits[:eliminate+1]))
+        sol += line[pos]
+        line = line[pos+1:]
+        eliminate -= pos
+    if len(sol)<size:
+        sol += line
+    return int(sol)
+        
+
 # Variables definition
 file_path = "./data/day_3.in"
 count_1 = 0
@@ -11,24 +25,11 @@ with open(file_path, "r") as f:
     data = [line.strip() for line in f]
 
 for line in data:
-    digits = np.array([int(c) for c in line])
-
     # Parte 1
-    pos = int(np.argmax(digits[:-1]))
-    count_1 += digits[pos] * 10 + digits[pos+1:].max()
+    count_1 += calculate_joltage(line, 2)
 
     # Parte 2
-    sol = ''
-    eliminate = len(line)-12
-    while eliminate>0 and len(sol)<12:
-        pos = int(np.argmax(digits[:eliminate+1]))
-        sol += line[pos]
-        line = line[pos+1:]
-        eliminate -= pos
-        digits = np.array([int(c) for c in line])
-    if len(sol)<12:
-        sol += line
-    count_2 += int(sol)
+    count_2 += calculate_joltage(line, 12)
 
 
 # Show answers
